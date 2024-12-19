@@ -1,0 +1,15 @@
+{
+	".Xup": "X+",
+	".Xdn": "X-",
+	".Yup": "Y+",
+	".Ydn": "Y-",
+	".Zup": "Z+",
+	".Zdn": "Z-",
+	
+	".home": "Home axis",
+	".X":"X",
+	".Y":"Y",
+	".Z":"Z",
+	
+	".mist": "Mist"
+}
