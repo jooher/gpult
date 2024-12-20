@@ -1,5 +1,7 @@
 //	'jog'	.d("btn @Xup'X+ @Xdn'X- @Yup'Y+ @Ydn'Y- @Zup`Z- @Zdn`Z-").u("cmd (jog $feed $step)")
 
+import $ from "./state.js";
+
 const
 stylize = (url,fun) => fetch(url)
 	.then( r => r.ok && r.json() )
@@ -11,8 +13,7 @@ stylize("lang/default.json", ([key,label]) =>`${key}::before{content:"${label}"}
 const
 	cmd = txt => console.log(txt),
 	command = action => $ => cmd(action);
-	
-	
+		
 const
 
 	elem = (tag,key) =>{
@@ -36,56 +37,43 @@ const
 		return btn;
 	},
 	
-	Input = ([key,param]) => {
+	Input = ([key,ref]) => {
 		const inp = elem("input",key);
-		inp.value = param[key];
+		inp.addEventListener("change",change);
+		inp.setAttribute("data-ref",ref);
+		inp.value = $[ref];
 		return inp;
 	},
 	
+	change = e => {
+		const tgt = e.target,
+			ref = tgt.getAttribute("data-ref"),
+			val = tgt.value;
+		$[ref]=val;
+		console.log(`${ref}->${val}`);
+	},
+	
 	keypad = (title,buttons) => div( title, buttons, Button ),
-	display = (title,params) => div( title, params, Input )
-	
+	numpad = (title,params)  => div( title, params, Input )
 	;
-	
-	
-const
 
-$ = {
-	JOG: {
-		feed: 100,
-		step: 1000
-	},
+//const JOG = $.JOG;
 
-	POS: {
-		x:10,
-		y:20,
-		z:30,
-		a:0
-	}
-}
-
-,h ={
-	get(tgt,prop){
-		tgt[prop]
-	},
-	put(tgt,prop,val){
-		tgt.prop = val;
-	}
-}
-
-,JOG = new Proxy($.JOG,h)
-,POS = new Proxy($.POS,h)
-
-;	
 
 const
 idle = div("idle pad", [
 
-	display("pos",POS),
-
-	//display("jog",JOG),
+	numpad("pos", {
+		"X":"G54 x",
+		"Y":"G54 y",
+		"Z":"G54 z",
+		"A":"G54 a"
+	}),
 	
-	keypad("jog", prep( axis => $ => cmd(`G91 G21 F${JOG.feed} ${axis}${JOG.step}`), {
+	numpad("jog", {
+	}),
+	
+	keypad("jog", prep( axis => _ => cmd(`G91 G21 F${$.JOG.feed} ${axis}${$.JOG.step}`), {
 		Xup: 'X+',
 		Xdn: 'X-',
 		Yup: 'Y+',
