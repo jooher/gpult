@@ -1,14 +1,19 @@
 const state = {
 	
-	JOG: {
-		feed: 100,
-		step: 1000
-	},
-
-	G54_x:10,
-	G54_y:20,
-	G54_z:30,
-	G54_a:0
+	X:10,
+	Y:20,
+	Z:30,
+	A:0,
+	
+	jog_feed: 100,
+	jog_step: 1000,
+	
+	accept:".g,.gcode,.nc,.ngc,.tap",
+	
+	upload:"http://192.168.2.77/upload?path=/",
+	
+	http	:"http://192.168.2.77/",
+	ws	:"ws://192.168.2.77:81/"
 },
 
 commands = {

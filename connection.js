@@ -1,37 +1,48 @@
-import "dap.js";
-
 const
-utf8=new TextDecoder(),
-endpoint = async_webcommunication ? `${document.location.host}/ws` : `${ip}:${port}/`,
+stub = m => console.log(m),
+utf8=new TextDecoder();
 
-socket = endpoint => {
+let
+page_id=-1;
+
+export const
+
+http = endpoint => query => fetch(endpoint+query+ (page_id>0?"&PAGEID="+page_id:"") ).then(response=>response.text()),
+
+wsocket = endpoint => {
+	
+	let
+	interval_ping,
+	last_ping = Date.now()
+	;
 	
 	const
 
 	commands = {
 		
-		CURRENT_ID: id => { console.log("connection id = " + page_id=id ); },
-		ACTIVE_ID:	id => { if(page_id != id) Disable_interface(); },
-		DHT: Handle_DHT,
+		CURRENT_ID: id => page_id=id,
+		ACTIVE_ID:	id => { if(page_id != id) stub('Disable_interface()'); },
+		// DHT: Handle_DHT,
 		
 		MSG: (code,message) => {
 		    console.log(`MSG ${code}: ${message}`);
-		    CancelCurrentUpload();
+		    stub('CancelCurrentUpload()');
 		},
 
 		ERROR: (code,message) => {
-		    console.log(`ERROR ${code}: ${message}`);
-		    CancelCurrentUpload();
+		    console.warn(`ERROR ${code}: ${message}`);
+		    stub('CancelCurrentUpload()');
 		},
 		
-		PING:		id => { 
-			if (!enable_ping)return;
+		PING:	id => { 
+			//if (!enable_ping)return;
 			page_id = id;
-			console.log("ping from id = " + page_id);
 			last_ping = Date.now();
-			
 			if (!interval_ping)
-			  interval_ping = setInterval( check_ping, 10e3 );
+			interval_ping = setInterval(
+				() => (Date.now()-last_ping > 9e3) && console.log("ping lost"),
+				20e3
+			);
 		}
 	},
 
@@ -39,14 +50,15 @@ socket = endpoint => {
 		binaryType: "arraybuffer",
 		onopen:	e => console.log("Connected"),
 		onclose:	e => console.log("Disonnected"),
-		onerror:	e => console.log("ws error", e),
+		onerror:	e => console.warn("ws error", e),
 		onmessage:	e => {
 			
 			if (e.data instanceof ArrayBuffer) {
-				const msgs = utf8.decode(e.data).split(/\n/g);
+				const msgs = utf8.decode(e.data);
 				msgs.forEach(msg=>{
-				    Monitor_output_Update(wsmsg);
-				    process_socket_response(wsmsg);
+					msg && console.log("Yay! "+msg);
+				    //Monitor_output_Update(wsmsg);
+				    //process_socket_response(wsmsg);
 				})
 			}else{
 				const msg = e.data.split(":"),
@@ -57,14 +69,5 @@ socket = endpoint => {
 		}
 	};
 
-	try { return Object.assign(new WebSocket ("ws://"+endpoint, ["arduino"]), handle); }
-	catch(e){ console.error(e); }
-},
-
-http = endpoint => {
-	
-	command = text=> `?commandText=$`
-	
-	return command => fetch(endpoint).then
-}
-
+	return Object.assign(new WebSocket(endpoint,["arduino"]), handle);
+};

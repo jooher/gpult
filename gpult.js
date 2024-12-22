@@ -1,79 +1,20 @@
 //	'jog'	.d("btn @Xup'X+ @Xdn'X- @Yup'Y+ @Ydn'Y- @Zup`Z- @Zdn`Z-").u("cmd (jog $feed $step)")
 
-import $ from "./state.js";
+import {stylize,prep,command,div,numpad,keypad,filepick,upload} from "./controls.js";
+import _ from "./state.js";
 
-const
-stylize = (url,fun) => fetch(url)
-	.then( r => r.ok && r.json() )
-	.then( obj => new CSSStyleSheet().replace(Object.entries(obj).map( fun ).join("\n")))
-	.then( stylesheet => document.adoptedStyleSheets.push(stylesheet))
-;
 stylize("lang/default.json", ([key,label]) =>`${key}::before{content:"${label}"}`)
 
-const
-	cmd = txt => console.log(txt),
-	command = action => $ => cmd(action);
-		
-const
+const app =[
 
-	elem = (tag,key) =>{
-		const el = document.createElement(tag);
-		el.className=key;
-		return el;
-	},
-	
-	prep = (fun,obj) => Object.fromEntries(Object.entries(obj).map(([key,value]) => [key,fun(value)])),
-	
-	div = (title,stuff,fun) => {
-		const group = elem("div",title),
-			elems = fun ? Object.entries(stuff).map(fun) : stuff;
-		elems.forEach( ch => group.appendChild(ch) );
-		return group;
-	},
-	
-	Button = ([key,action]) => {
-		const btn=elem("button",key);
-		btn.addEventListener("mousedown", typeof action == 'function' ? action : command(action));
-		return btn;
-	},
-	
-	Input = ([key,ref]) => {
-		const inp = elem("input",key);
-		inp.addEventListener("change",change);
-		inp.setAttribute("data-ref",ref);
-		inp.value = $[ref];
-		return inp;
-	},
-	
-	change = e => {
-		const tgt = e.target,
-			ref = tgt.getAttribute("data-ref"),
-			val = tgt.value;
-		$[ref]=val;
-		console.log(`${ref}->${val}`);
-	},
-	
-	keypad = (title,buttons) => div( title, buttons, Button ),
-	numpad = (title,params)  => div( title, params, Input )
-	;
+div("connect pad",[
+]),
 
-//const JOG = $.JOG;
-
-
-const
-idle = div("idle pad", [
-
-	numpad("pos", {
-		"X":"G54 x",
-		"Y":"G54 y",
-		"Z":"G54 z",
-		"A":"G54 a"
-	}),
+div("idle pad", [
 	
-	numpad("jog", {
-	}),
+	numpad("pos", prep( axis => num => command(`G0 F${_.jog_feed} ${axis}${num}`), "X Y Z")),
 	
-	keypad("jog", prep( axis => _ => cmd(`G91 G21 F${$.JOG.feed} ${axis}${$.JOG.step}`), {
+	keypad("jog", prep( axis => () => command(`$J=G91 G21 F${_.jog_feed} ${axis}${_.jog_step}`), {
 		Xup: 'X+',
 		Xdn: 'X-',
 		Yup: 'Y+',
@@ -81,6 +22,10 @@ idle = div("idle pad", [
 		Zup: 'Z+',
 		Zdn: 'Z-'
 	})),
+	
+	//jumper("jog_step", step => _.jog_step=step, "0.01 0.10 1.00 10.0"), 
+	
+	numpad("jog", prep( param => num => {_[param]=num}, "jog_feed jog_step" )),
 	 
 	keypad("home", {
 		x: 'G0 X0',
@@ -88,10 +33,26 @@ idle = div("idle pad", [
 		z: 'G0 Z0'
 	}),
 	
-	keypad('mcodes',{
+	div("files",[
+		filepick("job"),
+		upload("upload"),
+	]),
+	
+]),
+
+div("run pad",
+
+	progress("job"),
+	
+	keypad('overrides', {
+	}),
+	
+	keypad('mcodes', {
 		mist:'M'
 	})
 	
-]);
-	
-document.body.appendChild(idle); //documentElement.
+];
+
+
+
+document.body.append(app); //documentElement.

@@ -1,4 +1,57 @@
-.jog>button{width:4em;height:4em;/* background:teal; */}
-.home>button{height:2em;width:2em}
+.jog>button{font-size: 3rem;flex: 1;padding: 1.5rem;border-width: .5rem;border-radius: 1.25rem;}
+.home>button{height:2em; width:2em}
 
 .idle.pad {}
+
+.numpad, .keypad {
+    /* margin: 1rem 0; */
+}
+
+.keypad.jog {
+    display: flex;
+    flex-wrap: wrap;
+    /* align-items: flex-start; */
+    gap: .5rem;
+    flex-direction: column;
+    /* column-count: 3; */
+    height: 16rem;
+    /* padding: 1rem; */
+    background: limegreen;
+}
+
+.keypad::before {
+    display: block;
+}
+
+.numpad.pos>input {
+    font-size: 2em;
+    flex: 1;
+    width: 3em;
+    text-align: right;
+    border: none;
+    background: antiquewhite;
+}
+
+.numpad.pos {
+    display: flex;
+    gap: .5rem;
+}
+
+body {
+    margin: 1rem;
+    /* font-size: 1.2rem; */
+}
+
+.keypad {
+    margin: 0 -1rem;
+    padding:1rem;
+}
+
+select.job {
+    width: 100%;
+    padding: .5em;
+    /* font-size: 1.4em; */
+    border: none;
+    background: gold;
+    border-radius: .5rem;
+}
