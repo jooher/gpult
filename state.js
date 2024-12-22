@@ -1,4 +1,4 @@
-const state = {
+export default{ // const state = 
 	
 	X:10,
 	Y:20,
@@ -10,12 +10,12 @@ const state = {
 	
 	accept:".g,.gcode,.nc,.ngc,.tap",
 	
-	upload:"http://192.168.2.77/upload?path=/",
+	//upload:"http://192.168.2.77/upload?path=/",
 	
-	http	:"http://192.168.2.77/",
-	ws	:"ws://192.168.2.77:81/"
-},
-
+	http	:"http://fluidnc.local/",
+	ws	:"ws://fluidnc.local:81/"
+}
+/*
 commands = {
 	
 	G54: (val,axis) => console.log(`G0 ${axis}${val}`)
@@ -42,3 +42,4 @@ export default new Proxy(state, {
 	}
 
 });
+*/
