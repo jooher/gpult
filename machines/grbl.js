@@ -12,7 +12,7 @@ utf8=new TextDecoder(),
 un = str => str.substring(1,str.length-2),
 log = console.log,
 stub = log,
-nocors = {mode:"no-cors"},
+nocors = {},//{mode:"no-cors"},
 pid = () => page_id>0?"&PAGEID="+page_id:"",
  
 request = (query,specs) => fetch(_.http+query,specs||nocors),

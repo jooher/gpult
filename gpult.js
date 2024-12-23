@@ -1,6 +1,6 @@
 //	'jog'	.d("btn @Xup'X+ @Xdn'X- @Yup'Y+ @Ydn'Y- @Zup`Z- @Zdn`Z-").u("cmd (jog $feed $step)")
 
-import {Paged,E,stylize,numpad,keypad,filepick,upload,progress} from "./controls.js";
+import {Paged,E,stylize,numpad,keypad,commandpad,filepick,upload,progress} from "./controls.js";
 import machine from "./machines/grbl.js";
 
 //import _ from "./state.js";
@@ -45,11 +45,16 @@ app = Paged({
 			z: 'G0 Z0'
 		}),
 		
-		//div("files",[
+		commandpad,
 		
-		filepick("job", machine.run, machine.jobs ),
-		upload("upload", machine.upload )
-		//])
+		keypad("macros", {
+			mist:'M'
+		}),
+		
+		E("div jobs",{},[
+			filepick("job", machine.run, machine.jobs ),
+			upload("upload", machine.upload )
+		])
 	]),
 	
 	Run

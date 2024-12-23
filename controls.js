@@ -58,6 +58,22 @@ export const
 			onmousedown: action ? e => action(arg,e.target) : e => machine.command(arg)
 		}))
 	),
+	
+	commandpad = (recent =>{
+		const 
+			inp = E(`input`,{
+				onchange: e => {
+					const cmd = e.target.value;
+					if(cmd && confirm("Execute?\n\n"+cmd)){
+						machine.command(cmd);
+						hist.value += "\n"+cmd;
+					}
+				}
+			}),
+			his = E(`textarea`,{value:recent});
+		
+		return E(`div commandpad`, null, [ inp, his ])
+	})("recent"),
 
 	filepick = (title,action,fill) => E(`select ${title}`,{
 		onchange: e => e.target.value && action(e.target.value),
@@ -65,12 +81,15 @@ export const
 			fill().then(options=>e.target.replaceChildren(...options.map(o=>E("option",o))))
 	}),
 
-	upload = (title,action) => E(`input ${title}`,{
-		type		: "file",
-		multiple	: "multiple",
-		accept	: machine.accept,
-		onchange	: e => e.target.files && action(e.target.files)
-	}),
+	upload = (title,action) => E(`label button ${title}`,null,[
+		E(`input`,{
+			type		: "file",
+			multiple	: "multiple",
+			accept	: machine.accept,
+			onchange	: e => e.target.files && action(e.target.files)
+		})
+	]),
+
 
 	progress = (title,action) => E("progress ${title}")
 

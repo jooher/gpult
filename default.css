@@ -1,4 +1,4 @@
-.jog>button{font-size: 2rem;flex: 1;padding: 1.5rem;border-width: .5rem;border-radius: 1.25rem;}
+.jog>button{font-size: 2rem;flex: 1;padding: 1.5rem;margin: 0;/* border-width: .5rem; *//* border-radius: 1.25rem; */border: navajowhite;}
 .home>button{height:2em; width:2em}
 
 .idle.pad {}
@@ -11,16 +11,16 @@
     display: flex;
     flex-wrap: wrap;
     /* align-items: flex-start; */
-    gap: .5rem;
+    gap: .5em;
     flex-direction: column;
     /* column-count: 3; */
     height: 16rem;
     /* padding: 1rem; */
-    background: limegreen;
+    background: teal;
 }
 
 .keypad::before {
-    display: block;
+    /* display: block; */
 }
 
 .numpad.pos>input {
@@ -38,20 +38,83 @@
 }
 
 body {
-    margin: 1rem;
+    padding: 1rem;
+    /* margin: 1rem; */
     /* font-size: 1.2rem; */
 }
 
 .keypad {
     margin: 0 -1rem;
-    padding:1rem;
+    padding: 1rem;
 }
 
-select.job {
-    width: 100%;
-    padding: .5em;
+div.jobs {
+    /* width: 100%; */
+    padding: 1rem;
     /* font-size: 1.4em; */
-    border: none;
+    margin: 0 -1em;
+    /* border: none; */
     background: gold;
-    border-radius: .5rem;
+    /* border-radius: .5rem; */
+    display: flex;
+    gap: .5rem;
+}
+
+select {
+  /* background: wheat; */
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.jobs>select {
+    flex: 1;
+}
+
+button, .button {
+    font-family: roboto, sans-serif;
+    background: buttonface;
+    border: 1px outset buttonborder;
+    padding: .5em 1em;
+    border-radius: .2em;
+    margin: 0 2px;
+    box-shadow: 0 .1em .2em rgba(0,0,0,.2);
+}
+
+div::before {
+    display: block;
+}
+
+.commandpad {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+section.idle {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    
+    
+    
+    
+    
+    
+
+    body>section {
+    display: flex;
+    flex-direction: column;
+};
+}
+
+html,body {
+    height: 100%;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+textarea {
+    flex: 1;
 }
