@@ -15,6 +15,8 @@ export const
 			el.append(...ch);
 		return el;
 	},
+	
+	S = (cache => sel => cache[sel]||(cache[sel]=document.querySelector(sel)))({}),
 
 	stylize = (url,fun) => fetch(url)
 		.then( r => r.ok && r.json() )

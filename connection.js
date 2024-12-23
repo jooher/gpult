@@ -38,8 +38,7 @@ wsocket = endpoint => {
 			//if (!enable_ping)return;
 			page_id = id;
 			last_ping = Date.now();
-			if (!interval_ping)
-			interval_ping = setInterval(
+			if (!interval_ping)interval_ping = setInterval(
 				() => (Date.now()-last_ping > 9e3) && console.log("ping lost"),
 				20e3
 			);
