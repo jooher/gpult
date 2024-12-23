@@ -1,19 +1,26 @@
 //	'jog'	.d("btn @Xup'X+ @Xdn'X- @Yup'Y+ @Ydn'Y- @Zup`Z- @Zdn`Z-").u("cmd (jog $feed $step)")
 
-import {E,stylize,command,numpad,keypad,filepick,upload,progress} from "./controls.js";
+import {Paged,E,stylize,command,numpad,keypad,filepick,upload,progress} from "./controls.js";
+import machine from "./machines/grbl.js";
+
 import _ from "./state.js";
 
-stylize("lang/default.json", ([selector,label]) =>`${selector}::before{content:"${label}"}`)
+stylize("lang/default.json", ([selector,label]) =>`${selector}::before{content:"${label}"}`);
 
-const app =[
+export const
 
-	E("section connect", null
+app = Paged({
+	
+	""
+	:E("section start",null),
 
-	),
+	Connect
+	:E("section connect"),
 
-	E("section idle", null, [
+	Idle
+	:E("section idle", null, [
 		
-		numpad("pos", "X Y Z", (axis,num) => command(`G92 ${axis}${num}`) ), // F${_.jog_feed}
+		numpad("pos", "x y z", (axis,num) => machine.command.G(`G92 ${axis}${num}`) ), // F${_.jog_feed}
 		
 		keypad("jog", {
 			Xup: 'X+',
@@ -23,7 +30,7 @@ const app =[
 			Zup: 'Z+',
 			Zdn: 'Z-'
 			},
-			axis => command(`$J=G91 G21 F${_.jog_feed} ${axis}${_.jog_step}`)
+			axis => machine.command.jog(`G91 G21 F${_.jog_feed} ${axis}${_.jog_step}`)
 		),
 		
 		//jumper("jog_step", step => _.jog_step=step, "0.01 0.10 1.00 10.0"), 
@@ -38,13 +45,22 @@ const app =[
 		
 		//div("files",[
 		
-			filepick("job", filename => confirm(`Run ${filename}?`) && command(`$SD/Run=/${filename}`)),
+			filepick("job",
+				filename => confirm(`Run ${filename}?`) && command(`$SD/Run=/${filename}`),
+				() => fetch(_.upload)
+					.then( response => response.json() ) //"mock/files.json"
+					.then( json => json.files
+						.filter(f=>f.size>0)
+						.map(f=>({value:f.name, textContent:f.shortname}))
+					)
+			),
 			
 			upload("upload", file => fetch(_.http+"upload", {method:"POST",body:file}))
 		//])
 	]),
-
-	E("section run", null, [
+	
+	Run
+	:E("section run", null, [
 
 		progress("job"),
 			
@@ -56,8 +72,8 @@ const app =[
 			mist:'M'
 		})
 		
-	])
-]
-
-
-document.body.append(...app); //documentElement.
+	]),
+	
+	Hold
+	:E("section hold")
+});
