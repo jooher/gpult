@@ -1,13 +1,15 @@
 //	'jog'	.d("btn @Xup'X+ @Xdn'X- @Yup'Y+ @Ydn'Y- @Zup`Z- @Zdn`Z-").u("cmd (jog $feed $step)")
 
-import {Paged,E,stylize,command,numpad,keypad,filepick,upload,progress} from "./controls.js";
+import {Paged,E,stylize,numpad,keypad,filepick,upload,progress} from "./controls.js";
 import machine from "./machines/grbl.js";
 
-import _ from "./state.js";
+//import _ from "./state.js";
 
 stylize("lang/default.json", ([selector,label]) =>`${selector}::before{content:"${label}"}`);
 
-export const
+const
+
+_ = machine.vars,
 
 app = Paged({
 	
@@ -45,17 +47,8 @@ app = Paged({
 		
 		//div("files",[
 		
-			filepick("job",
-				filename => confirm(`Run ${filename}?`) && command(`$SD/Run=/${filename}`),
-				() => fetch(_.upload)
-					.then( response => response.json() ) //"mock/files.json"
-					.then( json => json.files
-						.filter(f=>f.size>0)
-						.map(f=>({value:f.name, textContent:f.shortname}))
-					)
-			),
-			
-			upload("upload", file => fetch(_.http+"upload", {method:"POST",body:file}))
+		filepick("job", machine.run, machine.jobs ),
+		upload("upload", machine.upload )
 		//])
 	]),
 	
@@ -71,9 +64,14 @@ app = Paged({
 		keypad('mcodes', {
 			mist:'M'
 		})
-		
+	
 	]),
 	
 	Hold
-	:E("section hold")
+	:E("section hold"),
+	
+	Alarm
+	:E("section alarm")
 });
+
+app("Idle");

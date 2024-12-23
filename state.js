@@ -1,4 +1,4 @@
-export default{ // const state = 
+export default { // const state = 
 	
 	x:10,
 	y:20,
@@ -8,12 +8,16 @@ export default{ // const state =
 	jog_feed: 100,
 	jog_step: 1000,
 	
-	accept:".g,.gcode,.nc,.ngc,.tap",
-	
+	http	:"http://fluidnc.local/",
+	ws	:"ws://fluidnc.local:81/"
+
+/*	
 	upload:"http://192.168.2.77/upload?path=/",
 	
 	http	:"http://192.168.2.77/", // "http://fluidnc.local/",
 	ws	:"ws://192.168.2.77:81/", //"ws://fluidnc.local:81/"
+*/
+
 }
 /*
 commands = {

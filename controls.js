@@ -1,5 +1,3 @@
-import _ from "./state.js";
-import {http,wsocket} from "./connection.js";
 import machine from "./machines/grbl.js";
 
 export const
@@ -50,14 +48,14 @@ export const
 
 	numpad = (title,inputs,action)  => E(`div numpad ${title}`, null,
 		prep(inputs).map(([title,arg]) => E(`input ${title}`,{
-			value:_[arg],
-			onchange:e=>action(arg,e.target.value)
+			value: machine.vars[arg],
+			onchange: e => action(arg,e.target.value)
 		}))
 	),
 
 	keypad = (title,buttons,action) => E(`div keypad ${title}`, null,
 		prep(buttons).map( ([title,arg]) => E(`button ${title}`,{
-			onmousedown: action ? e => action(arg,e.target) : e => command(arg)
+			onmousedown: action ? e => action(arg,e.target) : e => machine.command(arg)
 		}))
 	),
 
@@ -70,7 +68,7 @@ export const
 	upload = (title,action) => E(`input ${title}`,{
 		type		: "file",
 		multiple	: "multiple",
-		accept	: _.accept,
+		accept	: machine.accept,
 		onchange	: e => e.target.files && action(e.target.files)
 	}),
 
