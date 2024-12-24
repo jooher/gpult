@@ -8,10 +8,15 @@ export default { // const state =
 	jog_feed: 100,
 	jog_step: 1000,
 	
+	urls	:[
+		"fluidnc.local",
+		"192.168.2.77"
+	],
+	
 	http	:"http://fluidnc.local/",
 	ws	:"ws://fluidnc.local:81/"
 
-/*	
+/*
 	upload:"http://192.168.2.77/upload?path=/",
 	
 	http	:"http://192.168.2.77/", // "http://fluidnc.local/",

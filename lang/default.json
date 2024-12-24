@@ -1,4 +1,6 @@
 {
+	"button.connect":"Connect",
+	
 	".Xup": "X+",
 	".Xdn": "X-",
 	".Yup": "Y+",
@@ -6,13 +8,16 @@
 	".Zup": "Z+",
 	".Zdn": "Z-",
 	
-	".home": "Home axis",
-	".x":"X",
-	".y":"Y",
-	".z":"Z",
+	".home>.x":"⌂ X",
+	".home>.y":"⌂ Y",
+	".home>.z":"⌂ Z",
+	".home>.a":"⌂ A",
 	
 	".job"	:"Job files",
 	".upload"	:"Upload",
 	
-	".mist": "Mist"
+	".mist": "Mist",
+	
+	".idle>.me":"Motors ON",
+	".idle>.md":"Motors OFF"
 }

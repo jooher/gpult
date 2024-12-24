@@ -1,7 +1,41 @@
 import machine from "./machines/grbl.js";
 
+const controls = {};
+
+window.updates = new Proxy(controls, {
+	get(tgt,prop){
+		const c = tgt[prop] || (tgt[prop]=document.getElementById(prop));
+		if(c) return c["value" in c ? "value" : "textContent"]; 
+	},
+	set(tgt,prop,value){
+		const c = tgt[prop] || (tgt[prop]=document.getElementById(prop));
+		if(c) c["value" in c ? "value" : "textContent"]=value;
+		return true;
+	}
+});
+
 export const
 
+	Pages = pages => {
+		
+		let current = E("div");
+		
+		const	go = page => {
+				const p = pages[tabs.value = page];
+				if( p && p!=current )  //{ && pages[page]!=container.firstChild
+					current.replaceWith(current = p);//    container.replaceChild(,container.firstChild);
+			},
+			
+			tabs = E(`select pages`,
+				{ onchange: e => go(e.target.value) },
+				Object.keys(pages).map( page => E(`option ${page}`,{value:page,textContent:page}) )
+			);
+		
+		document.body.firstChild.before(E("div app",{},[tabs,current]));//
+		
+		return go;
+	},
+		
 	E = (tag,props,ch) => {
 		const head = tag.split(" "),
 			el = document.createElement(head.shift()||'div' );
@@ -12,6 +46,9 @@ export const
 			else el.setAttribute(p,props[p]);
 		if(ch)
 			el.append(...ch);
+		else
+			if(el.id)
+				controls[el.id]=el;
 		return el;
 	},
 	
@@ -29,25 +66,9 @@ export const
 		typeof obj === 'object' ? Object.entries(obj) :
 		null,
 
-	Paged = (pages,container) => {
-		
-		if(!container)container=document.body;
-		container.appendChild(pages[""]);
-		
-		return page => pages[page] && pages[page]!=container.firstChild &&
-			container.replaceChild(pages[page],container.firstChild)
-	},
-
-	update = (controls => obj => {
-		for(const i in obj){
-			const c = controls[i]||(controls[i]=document.getElementById(i));
-			c.textContent=obj[i];
-		}
-	}) ({}),
-
-
 	numpad = (title,inputs,action)  => E(`div numpad ${title}`, null,
 		prep(inputs).map(([title,arg]) => E(`input ${title}`,{
+			id:title, //
 			value: machine.vars[arg],
 			onchange: e => action(arg,e.target.value)
 		}))
@@ -58,6 +79,9 @@ export const
 			onmousedown: action ? e => action(arg,e.target) : e => machine.command(arg)
 		}))
 	),
+	
+	macros = group => 
+		machine.macros[group] ? keypad(group,machine.macros[group],machine.command) : E(`div nomacro`), 
 	
 	commandpad = (recent =>{
 		const 
@@ -70,9 +94,9 @@ export const
 					}
 				}
 			}),
-			his = E(`textarea`,{value:recent});
+			hist = E(`textarea`,{value:recent});
 		
-		return E(`div commandpad`, null, [ inp, his ])
+		return E(`div commandpad`, null, [ hist, inp ])
 	})("recent"),
 
 	filepick = (title,action,fill) => E(`select ${title}`,{
@@ -89,7 +113,8 @@ export const
 			onchange	: e => e.target.files && action(e.target.files)
 		})
 	]),
-
+	
+	msglog = title => E(`textarea ${title}`,{id:title}),
 
 	progress = (title,action) => E("progress ${title}")
 
