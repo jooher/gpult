@@ -9,7 +9,9 @@ window.updates = new Proxy(controls, {
 	},
 	set(tgt,prop,value){
 		const c = tgt[prop] || (tgt[prop]=document.getElementById(prop));
-		if(c) c["value" in c ? "value" : "textContent"]=value;
+		if(c) 
+			if("value" in c)c.value = value;
+			else c.append(T(value));
 		return true;
 	}
 });
@@ -51,6 +53,8 @@ export const
 				controls[el.id]=el;
 		return el;
 	},
+	
+	T = txt => document.createTextElement(txt),
 	
 	S = (cache => sel => cache[sel]||(cache[sel]=document.querySelector(sel)))({}),
 
@@ -113,9 +117,13 @@ export const
 			onchange	: e => e.target.files && action(e.target.files)
 		})
 	]),
+		
+	progress = (title,action) => E("progress ${title}",{id:title}),
 	
-	msglog = title => E(`textarea ${title}`,{id:title}),
+	rheo = (title,action) => E(`label ${title}`, null, [
+		E(`input`, { id:title, type:"range", min:0, max:200, value:100, onchange: e=>action(e.target.value) } )
+	]),
 
-	progress = (title,action) => E("progress ${title}")
+	msglog = title => E(`pre ${title}`,{id:title})
 
 ;

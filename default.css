@@ -36,9 +36,13 @@ button, .button {
     box-shadow: 0 .1em .2em rgba(0,0,0,.2);
 }
 
-.keypad, .numpad, .commandpad {
-    margin: 0;
+.keypad, .numpad, .commandpad, .bar {
+    /* margin: 0; */
     padding: 1rem;
+    display: flex;
+    gap: .5rem;
+    align-content: stretch;
+    /* justify-content: space-evenly; */
 }
 .keypad.jog {
     display: flex;
@@ -46,7 +50,7 @@ button, .button {
     gap: .5em;
     flex-direction: column;
     height: 16rem;
-    background: teal;
+    background: darkcyan;
 }
 
 .jog>button{font-size: 2rem;flex: 1;padding: 1.5rem;margin: 0;/* border-width: .5rem; *//* border-radius: 1.25rem; */border: navajowhite;}
@@ -56,6 +60,7 @@ button, .button {
     /* margin: 1rem; */
     display: flex;
     gap: 1rem;
+    background: cadetblue;
 }
 
 .numpad.pos>input {
@@ -74,8 +79,8 @@ button, .button {
 .bar{
     padding: 1rem;
     /* margin: 0 -1em; */
-    display: flex;
-    gap: .5rem;
+    /* display: flex; */
+    /* gap: .5rem; */
 }
 
 .bar>select {
@@ -142,3 +147,16 @@ option.Run{background:orange}
 */
 option.Alarm{color:red}
 
+
+
+.keypad.home {
+    background: darkcyan;
+}
+
+.numpad.jog {
+    background: darkslategrey;
+}
+
+pre#MSG {
+    flex: 1;
+}

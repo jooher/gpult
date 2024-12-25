@@ -1,4 +1,4 @@
-import {Pages,E,stylize,msglog,numpad,keypad,commandpad,filepick,upload,macros,progress} from "./controls.js";
+import {Pages,E,stylize,msglog,numpad,keypad,rheo,commandpad,filepick,upload,macros,progress} from "./controls.js";
 import machine from "./machines/grbl.js";
 
 stylize("lang/default.json", ([selector,label]) =>`${selector}::before{content:"${label}"}`);
@@ -14,7 +14,7 @@ window.gpult = Pages({
 	Connect
 	:E("section connect",null,[
 	
-		msglog("MSG"),
+		msglog("msg"),
 	
 		E("div bar", null, [
 			E("select",
@@ -31,7 +31,7 @@ window.gpult = Pages({
 	Idle
 	:E("section idle", null, [
 	
-		E('div state',{id:"GC"}),
+		E('input state',{id:"gc",disabled:"disabled"}),
 		
 		commandpad,
 		
@@ -66,11 +66,17 @@ window.gpult = Pages({
 	Run
 	:E("section run", null, [
 
-		progress("job"),
+		//fileinfo("jobinfo"),
+
+		progress("jobprogress"),
 			
-		keypad('overrides', {
-			"F": "feed +"
-		}),
+		rheo("feed", percent => {} ),
+		rheo("spindle", percent => {} ),
+		
+		keypad("runcontrol", {
+			pause	: "$pause",
+			stop	: "$stop"
+		}, command),
 		
 		keypad('mcodes', {
 			mist:'M'
@@ -79,7 +85,9 @@ window.gpult = Pages({
 	]),
 	
 	Alarm
-	:E("section alarm")
+	:E("section alarm", null, [
+		
+	])
 });
 
 machine.go("Connect");

@@ -30,6 +30,7 @@ connect = (events => url => {
 	handle = {
 
 		head :(handlers => str => {
+			
 			const msg = str.split(":"),
 				handler = handlers[msg.shift()];
 			if(handler)
@@ -40,7 +41,7 @@ connect = (events => url => {
 			// DHT: Handle_DHT,
 			
 			MSG: (code,message) => {
-				console.log(`MSG ${code}: ${message}`);
+				//console.log(`MSG ${code}: ${message}`);
 				stub('CancelCurrentUpload()');
 			},
 
@@ -54,8 +55,7 @@ connect = (events => url => {
 				page_id = id;
 				last_ping = Date.now();
 				if (!interval_ping)interval_ping = setInterval(
-					() => (Date.now()-last_ping > 9e3) && console.log("ping lost"),
-					20e3
+					() => (Date.now()-last_ping > 9e3) && console.log("ping lost"), 20e3
 				);
 			}
 		}),
@@ -68,7 +68,7 @@ connect = (events => url => {
 			"<"
 			:( parse => str => {
 				const data = un(str).split('|'),
-					state = data.shift(); //Idle|Jog|Run|Hold
+					state = data.shift(); //Idle|Jog|Run|Hold|Alarm
 					
 				go(state);
 					
@@ -90,8 +90,9 @@ connect = (events => url => {
 				const data = un(str).split(/\:/);
 				switch(data.shift()){
 					case "GC" : 
-						return update({GC:data});// G-state // GC:G0 G54 G17 G21 G91 G94 M5 M9 T0 F6000 S0
-					case "MSG": return update({MSG:data});	// Gcode error // MSG:INFO: MSG:ERR: 
+						return update({gc:data});// G-state // GC:G0 G54 G17 G21 G91 G94 M5 M9 T0 F6000 S0
+					case "MSG":
+						return update({msg:data});	// Gcode error // MSG:INFO: MSG:ERR: 
 					default: return
 				}
 			},
@@ -124,7 +125,7 @@ connect = (events => url => {
 
 	return {
 		binaryType: "arraybuffer",
-		onopen:	e => { console.log("Connected"); command("?"); }, //
+		onopen:	e => { console.log("Connected"); command("?"); command(); }, //
 		onclose:	e => go("Connect"),
 		onerror:	e => go("Connect"),
 		onmessage:	e => (e.data instanceof ArrayBuffer) ? handle.body(utf8.decode(e.data)) : handle.head(e.data)
@@ -133,7 +134,7 @@ connect = (events => url => {
 })()),
 
 pageid = () => page_id>0?"&PAGEID="+page_id:"",
-command = t => request(`command?commandText=${encodeURI(t)}${pageid()}`), //Component
+command = t => request(`command?commandText=${encodeURI(t)}${pageid()}`), //Component 
 
 update = updates => Object.assign(window.updates,updates), 
 go = (same => state => window.gpult(same[state]||state))({Jog:"Idle",Hold:"Run"})
@@ -147,6 +148,8 @@ export default {
 	
 	connect, // url =>
 	command, // commandText =>
+	
+	
 	jog	: t => command("$J="+t),
 	
 	run	: filename => confirm(`Run ${filename}?`) && command(`$SD/Run=/${filename}`),

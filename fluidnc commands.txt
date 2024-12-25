@@ -1,0 +1,128 @@
+[
+    $Alarm/Disable or $X
+    $Alarms/List or $A
+    $Alarm/Send=<alarm_num>
+    
+    $Build/Info or $I
+    $Bye
+    $Channel/Info or $CI
+    $Commands/List or $CMD
+    $GPIO/Dump
+    $Errors/List or $E
+    $FakeLaserMode or $32
+    $FakeMaxSpindleSpeed or $30
+    $Firmware/Info or $ESP800
+    
+    $GCode/Check or $C
+    $GCode/Modes or $G
+    $GCode/Offsets or $#
+    $GCode/StartupLines or $N
+    
+    $GrblNames/List or $L
+    $GrblSettings/List or $$
+    
+    $Heap/Show or $Heap
+    $Help or $
+    $Home, $H, or $H<xxx>
+    $Jog or $J
+    $Limits/Show or $Limits
+    
+    $LocalFS/Backup
+    $LocalFS/Delete
+    $LocalFS/Format
+    $LocalFS/List
+    $LocalFS/ListJSON =path
+    $LocalFS/Run
+    $LocalFS/Show
+    $LocalFS/Size
+    $LocalFS/Hashes
+    $LocalFS/Rename =path
+    $LocalFS/Migrate =path
+    $LocalFS/Restore =path
+    
+    $Macros/Run or $RM
+    
+    $Motor/Disable or $MD
+    $Motor/Enable or $ME
+    $Motors/Init or $MI
+    
+    $Notification/Send or $ESP600
+    $Notification/Setup
+    
+    $Radio/State
+    $Report/Interval or $RI
+    
+    $SD/Delete
+    $SD/List
+    $SD/ListJSON
+    $SD/Run
+    $SD/Show
+    $SD/Rename=current_name>new_name
+    $SD/Status or $ESP200
+    
+    $Files/ListGcode=<path>
+    $File/ShowSome=<lines>,<path>
+    
+    $Settings/Erase or $NVX
+    $Settings/List or $S
+    $Settings/ListChanged or $SC
+    $Settings/Restore or $RST
+    $Settings/Stats or $V
+    
+    $Sta/Setup or $ESP103
+    $Startup/Show or $SS
+    $State or $T
+    $System/Control or $ESP444
+    $System/IP or $ESP111
+    $System/Sleep $SLP
+    $System/Stats or $ESP420
+    
+    $WebUI/Help or $ESP0
+    $WebUI/List $ESP400
+    $WebUI/Set or $ESP401
+    $WiFi/ListAPs or ESP410
+    
+    $Xmodem/Receive or $XR
+    $Xmodem/Send or $XS
+    
+Grbl Setting Compatibility
+How to use them
+    $Start/Message
+    $Firmware/Build
+    $Report/Status
+    $Config/Filename
+    $Message/Level
+    
+    $Notification/Type
+    $Notification/T1
+    $Notification/T2
+    $Notification/TS
+    
+    $Telnet/Enable
+    
+    $HTTP/Enable
+    $HTTP/Port
+    $HTTP/BlockDuringMotion
+    
+    $WiFi/Mode
+    $WiFi/FastScan
+    $Wifi/PsMode
+    
+    $Sta/SSID
+    $Sta/Password
+    $Sta/IPMode
+    $Sta/IP
+    $Sta/Gateway
+    $Sta/Netmask
+    
+    $AP/SSID
+    $AP/Password
+    $AP/IP
+    $AP/Country
+    
+    $Hostname
+    $Bluetooth/Name
+    $SD/FallbackCS
+    Realtime ASCII Commands
+    Realtime Extended ASCII Commands"
+]
