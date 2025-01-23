@@ -1,27 +1,25 @@
-import {Pages,E,stylize,msglog,numpad,keypad,rheo,commandpad,filepick,upload,macros,progress} from "./controls.js";
+import {o,stylize,Pages,Msglog,Numpad,Keypad,Commandpad,Rheo,Filepick,Upload,Macros,Progress} from "./controls.js";
 import machine from "./machines/grbl.js";
 
 stylize("lang/default.json", ([selector,label]) =>`${selector}::before{content:"${label}"}`);
 
-const
-
-axes = "x y z",
-_ = machine.vars,
-command = machine.command;
+const	_ = machine.vars,
+	command = machine.command,
+	axes = "x y z";
 
 window.gpult = Pages({
 
 	Connect
-	:E("section connect",null,[
+	:o("section connect",null,[
 	
-		msglog("msg"),
+		Msglog("msg"),
 	
-		E("div bar", null, [
-			E("select",
+		o("div bar", null, [
+			o("select",
 				{ onchange: e => machine.connect(e.target.value) },
-				_.urls.map(url=>E("option",{textContent:url}))
+				_.urls.map(url=>o("option",{textContent:url}))
 			),
-			E("button connect",
+			o("button connect",
 				{ onclick: e => machine.connect(e.target.previousSibling.value) }
 			)
 		])
@@ -29,21 +27,21 @@ window.gpult = Pages({
 	]),
 
 	Idle
-	:E("section idle", null, [
+	:o("section idle", null, [
 	
-		E('input state',{id:"gc",disabled:"disabled"}),
+		o('input state',{id:"gc",disabled:"disabled"}),
 		
-		commandpad,
+		Commandpad,
 		
-		macros("idle"),				
+		Macros("idle"),				
 		 
-		keypad("home bar", axes, axis => 
-			confirm(`Home axis ${axis}?`) && command(`G0 ${axis}0`)
+		Keypad("home bar", axes, axis => 
+			confirm(`Home axis ${axis}?`) && command(`G53 G0 ${axis}0`)
 		),
 		
-		numpad("pos", axes, (axis,num) => command(`G92 ${axis}${num}`) ), // F${_.jog_feed}
+		Numpad("pos", axes, (axis,num) => command(`G92 ${axis}${num}`) ), // F${_.jog_feed}
 		
-		keypad("jog", {
+		Keypad("jog", {
 			Xup: 'X+',
 			Xdn: 'X-',
 			Yup: 'Y+',
@@ -56,36 +54,36 @@ window.gpult = Pages({
 		
 		//jumper("jog_step", step => _.jog_step=step, "0.01 0.10 1.00 10.0"), 
 		
-		numpad("jog", "jog_feed jog_step", (param,num) => {_[param]=num} ),
-		E("div jobs bar", null, [
-			filepick("job", machine.run, machine.jobs ),
-			upload("upload", machine.upload )
+		Numpad("jog", "jog_feed jog_step", (param,num) => {_[param]=num} ),
+		o("div jobs bar", null, [
+			Filepick("job", machine.run, machine.jobs ),
+			Upload("Upload", machine.Upload )
 		])
 	]),
 	
 	Run
-	:E("section run", null, [
+	:o("section run", null, [
 
 		//fileinfo("jobinfo"),
 
-		progress("jobprogress"),
+		Progress("jobProgress"),
 			
-		rheo("feed", percent => {} ),
-		rheo("spindle", percent => {} ),
+		Rheo("feed", percent => {} ),
+		Rheo("spindle", percent => {} ),
 		
-		keypad("runcontrol", {
+		Keypad("runcontrol", {
 			pause	: "$pause",
 			stop	: "$stop"
 		}, command),
 		
-		keypad('mcodes', {
+		Keypad('mcodes', {
 			mist:'M'
 		})
 	
 	]),
 	
 	Alarm
-	:E("section alarm", null, [
+	:o("section alarm", null, [
 		
 	])
 });
