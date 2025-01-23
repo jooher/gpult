@@ -11,8 +11,7 @@ const router = (A,V) => {
 	TT = T*T,
 	
 	assert = (what,why) => what||console.warn(why),
-	log = console.log,
-	round = i => i, //Math.round,
+	round = n => .01 * Math.round(n*100),// n=>n, //
 
 	ramp = (v,w) => {
 		const
@@ -20,30 +19,25 @@ const router = (A,V) => {
 		d = t*(w+v)/2; // = (w2-v2)/2A //   (w2-v12+w2-v22)/2A = 2w2-(v12+v22) / 2A = ( w*w - ( v1*v1 + v2*v2 )/2 )*I
 		return [t,d];
 	},
-	
-	cruise = (d,v,v1,v2) => d - ( v*v - ( v1*v1 + v2*v2 )/2 )*I;
-	
+		
+	log = console.log;	
 	
 	return {
 		
 		span	:(d,v1,v2) =>{
 			
-			let
-			v = V,
-			d0 = cruise(d,v,v1,v2);
-			
-			if(d0<0){ // not enough distance for cruise
-				const t = T + Math.sqrt(TT+d0/A);
-				v -= A*t;
-				log(`speed truncated to: ${v}, t=${t}`);
-			}else log(`cruise distance:${d0}`);
-			
 			const
-			[t1,d1] = ramp(v1,v),
-			[t2,d2] = ramp(v2,v),
-			t0 = (d-d1-d2)/v;
-						
-			assert(d+1 > d1+d2, `${d} still less than ${d1} + ${d2}`);
+				w = d*A + ( v1*v1 + v2*v2 )/2, // reachable speed
+				v = V*V < w ? V : Math.sqrt( w ) , //round( )
+				
+				t1 = round( I*(v-v1) ),
+				t2 = round( I*(v-v2) ),
+				
+				d0 = d - (t1*(v1+v)+t2*(v2+v))/2,
+				t0 = round(d0/v) //	 			
+				;
+			
+			log(`max speed: ${v}`);//, t=${t}
 			
 			return [t1,t0,t2]; // accel, cruise, deccel
 

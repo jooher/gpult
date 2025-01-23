@@ -2,13 +2,12 @@
 <body>
 <canvas id="plot" width=1000 height=100></canvas>
 <pre>
-A:	<input id="A" type=number value=10 min=0 max=1000/>
-V:	<input id="V" type=number value=1000 min=0 max=1000/>
+A:	<input id="A" type=number value=10 min=0 max=1000/> um/ms2 = m/s2
+V:	<input id="V" type=number value=1000 min=0 max=1000/> um/ms = mm/s
 
-d:	<input id="d" type=number value=10000 min=0 max=1000/>
-v1:	<input id="v1" type=number value=0 min=0 max=1000/>
-v2:	<input id="v2" type=number value=500 min=0 max=1000/>
-
+d:	<input id="d" type=number value=10000 min=0 max=1000/> um
+v1:	<input id="v1" type=number value=0 min=0 max=1000/> um/ms = mm/s
+v2:	<input id="v2" type=number value=500 min=0 max=1000/> um/ms = mm/s
 
 A: 1G = 10 m/s2 = 10 um/ms2
 V: 60 m/min = 1 m/s = 1000 um/ms a pretty fast G0. Fast G1 is 6 m/s = 100 um/ms
@@ -33,7 +32,7 @@ test = ({A,V,d,v1,v2}) =>{
 		dist = (v,t)=> v*t + A*t*t/2, 
 		D = dist(v1,accel) + V*cruise + dist(v2,deccel);
 		
-	log(`Accel:${accel}; Cruise:${cruise}; Deccel:${deccel}; Distance:${D}`);
+	log(`Accel:${accel}; Cruise:${cruise}; Deccel:${deccel}; Time:${accel+cruise+deccel}; Distance:${D}`);
 	
 
 },
