@@ -54,7 +54,7 @@ export const
 		return el;
 	},
 	
-	T = txt => document.createTextElement(txt),
+	T = txt => document.createTextNode(txt+"\n"),
 	
 	S = (cache => sel => cache[sel]||(cache[sel]=document.querySelector(sel)))({}),
 
