@@ -1,0 +1,50 @@
+<!doctype html>
+<body>
+<canvas id="plot" width=1000 height=100></canvas>
+<pre>
+A:	<input id="A" type=number value=10 min=0 max=1000/>
+V:	<input id="V" type=number value=1000 min=0 max=1000/>
+
+d:	<input id="d" type=number value=10000 min=0 max=1000/>
+v1:	<input id="v1" type=number value=0 min=0 max=1000/>
+v2:	<input id="v2" type=number value=500 min=0 max=1000/>
+
+
+A: 1G = 10 m/s2 = 10 um/ms2
+V: 60 m/min = 1 m/s = 1000 um/ms a pretty fast G0. Fast G1 is 6 m/s = 100 um/ms
+d: 10 mm = 10000 um
+
+</pre>
+
+<script src="route.js"></script>
+
+<script>
+
+const
+inps = [...document.getElementsByTagName("input")],
+ctx = document.getElementById("plot").getContext("2d"),
+log = console.log,
+
+
+test = ({A,V,d,v1,v2}) =>{
+
+	const
+		[accel,cruise,deccel] = router(A,V).span(d,v1,v2),
+		dist = (v,t)=> v*t + A*t*t/2, 
+		D = dist(v1,accel) + V*cruise + dist(v2,deccel);
+		
+	log(`Accel:${accel}; Cruise:${cruise}; Deccel:${deccel}; Distance:${D}`);
+	
+
+},
+
+update = e => {
+	test(Object.fromEntries(inps.map(i=>[i.id,parseInt(i.value)])))
+};
+
+inps.forEach( i => i.addEventListener("change",update) );
+ctx.strokeStyle="green";
+
+</script>
+
+</body>
