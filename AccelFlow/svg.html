@@ -4,7 +4,10 @@
 	    <path id="path" fill="#800" d="m 21,45 55,140 5,-150 114,5 -15,25 60,15 -70,5 60,15 -40,50 -10,25 -79,25 -15,30 -57,-35 z"></path>
 	</svg>
 	
+	<script src="maths.js"></script>
+	
 	<script>
+	"use strict";
 	
 	const
 	path	= document.getElementById("path").getAttribute("d").split(" ")
@@ -14,54 +17,21 @@
 		
 	route =[],
 	
-	len	= (x,y) => Math.sqrt(x*x+y*y),
-	
 	svg = document.getElementById("svg"),
 	
-	circle = atr => { //
-		const c=document.createElementNS("http://www.w3.org/2000/svg","circle");//svg.namespaceURI
-		for(const a in atr)c.setAttribute(a,atr[a]);
+	elsvg = ([tag,atr]) =>{
+		const c=document.createElementNS("http://www.w3.org/2000/svg",tag);//svg.namespaceURI
+		if(atr)for(const a in atr)c.setAttribute(a,atr[a]);
 		return c;
 	};
-	
-	let	mx=0,
-		my=0,
-	
-		cxn=0,
-		cyn=1,
-		
-		r=8
-		;
-		
-	svg.append( //circle({cx:120,cy:100,r:20,style:"fill:#0f0"}) );
-	
-	...path.map( 
-		([x,y]) => {
-			const
-				n = 1/len(x,y),
-				yn = y*n,
-				xn = x*n,
-				
-				ctg = (cyn-yn)/(cxn+xn),
-				abs = Math.abs(ctg), //
-				sgn = Math.sign(ctg),
-				
-				ox = mx + r*(sgn*cyn-abs*cxn);
-				oy = my - r*(abs*cyn+sgn*cxn);
-				
-				color = ctg > 0 ? "0f0" : "f00";
-				
-				c = circle({cx:ox,cy:oy,r:r,style:`fill:#${color};stroke:none`});
-			
-			mx += x;
-			my += y;
-			
-			cxn=xn;
-			cyn=yn;
-			
-			return c;
-		})
+
+	svg.append(	
+		//...path.map(rounds(6,1)).flat().map(elsvg)
+		elsvg(["path", {
+			d: "M 0 0 " + path.map(rounds(6,-1)).join("\n"),
+			stroke:"lime",
+			fill:"none"			
+		}])
 	);
-	
 	</script>
 </body>
