@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>test</title>
+<style>
+section{margin:2em 1em; text-align:center}
+button{padding:1em; margin:1em;}
+</style>
+<script>
+"use strict";
+
+let ip="http://192.168.2.89/";
+
+const
+controls = {},
+
+o = (tag,props,ch) => {
+	const head = tag.split(" "),
+		el = document.createElement(head.shift()||'div' );
+	if(head.length)
+		el.classList.add(...head);
+	if(props)for(const p in props)
+		if(p in el) el[p] = props[p];
+		else el.setAttribute(p,props[p]);
+	if(ch)
+		el.append(...ch);
+	else
+		if(el.id)
+			controls[el.id]=el;
+	return el;
+},
+
+query = command => fetch(ip+command),
+
+ui = m => document.body.append(
+	o("input",{
+		id:"ip",
+		onchange: e => ip=`//${e.target.value}/`
+	}),
+	
+	o("section", {}, Object.entries(m).map( ([label,key]) => o('button',{
+		textContent:label,
+		onclick: e => query(key)
+	})))
+);
+
+</script>
+</head>
+
+<body>
+<label for="ip">IP:</label>
+<script>
+
+ui({
+	"ON": "H",
+	"OFF": "L"
+});
+
+</script>
+
+</body>
+</html>
