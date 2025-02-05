@@ -1,15 +1,14 @@
 <!doctype html>
 <body>
 	<svg id="svg" xmlns="http://www.w3.org/2000/svg" width="400" height="600" viewBox="0 0 400 600">
-		<path id="shape" fill="#800" d="M 20,300 55,375 338,465 236,349 202,33 63,245 z"></path>
+		<path id="shape" fill="#cce" d="M 40,300 55,375 338,465 236,349 202,133 103,245 z"></path>
 	</svg>
 	
 	<script src="maths.js"></script>
 	
 	<script>
 	"use strict";
-	 //  <path id="path" fill="#800" d="m 0 21,45 55,140 5,-150 114,5 -15,25 60,15 -70,5 60,15 -40,50 -10,25 -79,25 -15,30 -57,-35 z"></path>
-	
+
 	const
 	
 	svg = document.getElementById("svg"),
@@ -20,25 +19,29 @@
 		return c;
 	},
 	
-	T = offset(8), // tool radius
-	A = smooth(8,4), // allowance
+	tool = 18,
+	
+	T = offset(tool), // tool radius
+	A = smooth(tool,20), // allowance
 	
 	shape	= parse(document.getElementById("shape").getAttribute("d")),
 	ofs = T(shape),
 	alw = A(ofs);
+	
+	console.log(shape);
+	console.log(ofs);
+	console.log(alw);
 
 	svg.append(	
 		//...path.map(rounds(6,1)).flat().map(elsvg)
 		elsvg(["path", {
-			d: "M 20,300 " + ofs.map(([X,Y])=>`L ${X} ${Y}`).join("\n"),
-			stroke:"pink",
-			fill:"none"	
+			d: "M " + ofs.map( c => c.join(' ') ).join("\nL "),
+			style:"stroke:black; stroke-width:1px; fill:none"
 		}]),
 
 		elsvg(["path", {
-			d: "M 20,300" + alw.join("\n"),
-			stroke:"lime",
-			fill:"none"	
+			d: "M " + alw.map(([lx,ly,r,ax,ay]) => [lx,ly,"a",r,r,0,0,Math.sign(r)>0?0:1,ax,ay].join(" ")).join("\nL "),
+			style:`stroke:rgba(0,180,0,.5); fill:none; stroke-width:${tool*2}px` //
 		}])
 	);
 	</script>

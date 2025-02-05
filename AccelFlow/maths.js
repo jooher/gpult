@@ -1,5 +1,7 @@
 "use strict";
 
+let absx,absy,cxn,cyn;
+	
 const
 
 round = n => n, // Math.round, // n => .1 * Math.round(n*10),//
@@ -15,12 +17,7 @@ parse = d => {
 		shape.push(shape[0]);
 	
 	return shape;
-};
-
-
-let absx,absy,cxn,cyn,cx,cy;
-	
-const
+},
 
 norm = ([X,Y]) => {
 	const 
@@ -34,7 +31,6 @@ norm = ([X,Y]) => {
 start = corners => {
 	[absx,absy] = corners.at(-2);
 	[cxn,cyn] = norm( corners.at(-1) );
-	[cx,cy] = corners.at(-1);	
 	return corners;
 },
 
@@ -64,9 +60,9 @@ corners => start(corners).map( corner => {
 		abs = Math.abs(ctg), //
 		sgn = Math.sign(ctg),
 		
-		r = (sgn*R)>0 ? R : round(A/abs),
-		rx = - r*(sgn*cyn-abs*cxn),
-		ry = + r*(abs*cyn+sgn*cxn),
+		r = round(A/abs) + ( sgn*R>0 ? R : 0 ),
+		rx = r*(sgn*cyn-abs*cxn),
+		ry = r*(abs*cyn+sgn*cxn),
 		
 		// trim
 		s = Math.sqrt(rx*rx + ry*ry - r*r),
@@ -80,12 +76,9 @@ corners => start(corners).map( corner => {
 		
 		color = ctg > 0 ? "green" : "red";
 		
-	[absx,absy] = corner;		
+	[absx,absy] = corner;
 	cxn = xn;
 	cyn = yn;
 
-	return [
-		"L",lx,ly,
-		"a",r,r,0,0,sgn>0?0:1,ax,ay	// a rx ry x-axis-rotation large-arc-flag sweep-flag dx dy
-	].join(" "); 
+	return [ lx,ly,r*sgn,ax,ay ]; 
 });
