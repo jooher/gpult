@@ -5,20 +5,23 @@ A: 1 g = 10 m/s2 = 10 e6 um/ e6 ms2 = 10 um/ms2
 
 const
 
-router = (A,V) => {
+hyp = (a,b) => a*a+b*b,
+round = n => .01 * Math.round(n*100),// n=>n, //
+log = console.log,
+
+
+prepare = (A,V) => {
 	
+	let	v = 0,
+		vd = 0;
+
 	const
 	I = 1/A, // inertivity
 	
-	round = n => .01 * Math.round(n*100),// n=>n, //
-	log = console.log;
-	
-	return {
-		
-		span	:(d,v1,v2) =>{
-			
+	accel = (d,v1,v2) =>{
+				
 			const
-				w = d*A + ( v1*v1 + v2*v2 )/2, // reachable speed
+				w = d*A + hyp(v1,v2)/2, // reachable speed
 				v = V*V < w ? V : Math.sqrt( w ) ,
 				
 				t1 = round( I*(v-v1) ), // acceleration time
@@ -30,49 +33,93 @@ router = (A,V) => {
 			log(`max speed: ${v}`);//, t=${t}
 			
 			return [t1,t0,t2]; // accel, cruise, deccel
-
 		},
-
-		arc	:(r,u1,u2) =>{
-			let v = A*r
-		}
 		
-	}
 
-};
+	retreat = (nn,[[t1,t0,t2],r]) => (t0 ? V : v+t2*A ) - t1*A,
 
-let	v = 0,
-	vd = 0;
-
-const
-
-retreat = ([[t1,t0,t2],n*x,n*y,r,u]) => (t0 ? V : v+t2*A ) - t1*A,
-
-makeplan = path => {
-	
-	const plan=[];
-	
-	for(let i=0; i<path.length; ){
+	makeplan = path => {
 		
-		const [x,y,r,u] = path[i],
-			vr = A*r+vd, // desired arc speed
-			n = 1/Math.sqrt(x*x+y*y),
-			d = 1/n,
-			[t1,t0,t2] = span(d,v,vr);
-						
-		if(t1<0){ // exit speed is too high, need to deccelerate in earlier steps
-			vd = t1*A;
-			v = retreat(plan[--i]); // recovered speed and step back 
+		const plan=[];
+		
+		for(let i=0; i<path.length; ){
 			
-		}else{ // otherwise, okay
-			vd = 0;
-			v = vr;
-			if(t2<0){ // exit speed lower than allowed, no problem
-				v += A*t2; // simply reduce next step's entry speed
-				t2 = 0;
-			} 
-			plan[i++] = [[t1,t0,t2],n*x,n*y,r,u]; // nx = cos, ny = sin
+			const [x,y,r,u] = path[i],
+				vr = A*r+vd, // desired arc speed
+				n = 1/Math.sqrt(hyp(x,y)), // reverse root is faster
+				d = 1/n,
+				[t1,t0,t2] = accel(d,v,vr);
+
+			if(t1<0){ // exit speed is too high, need to decelerate in earlier steps
+				vd = t1*A;
+				v = retreat(plan[--i]); // recovered speed and step back 
+				
+			}else{ // otherwise, okay
+				vd = 0;
+				v = vr;
+				if(t2<0){ // exit speed lower than allowed, no problem
+					v += A*t2; // simply reduce next step's entry speed
+					t2 = 0;
+				} 
+				plan[i++] = [[n*x,n*y],[t1,t0,t2],r]; // nx = cos, ny = sin
+			}
 		}
+		return plan;
+	},
+	
+	stair = (n,t) => {
+		const	// t is rounded
+			s = round(t*(1-n)), // steps count
+			l = round(t/s), // step length
+			r = t-s*l;
+		return [s,l,r]
+	},
+
+	chew = ([nn,[t1,t0,t2],r]) => nn.map( n => [stair(n,t1),t0,stair(n,t2),r] )
+}
+
+
+execute = _ => { // runs on MCU
+	
+	const
+	
+	stair = ([s,l,r],dir) => {
+		while(s--){
+			while(r--)
+				yield dir;
+			r = l;
+			yield 0;
+		}
+	},
+	
+	
+	arc = 
+	
+	for(const [ttt,r,nn] of plan){
+		
+		 // line
+		for(const t of ttt){
+			emit(nn.map( (n,axis) =>({axis,t,n})} )))
+			wait(t);
+		}
+		
+		// arc
+		
 	}
-	return plan;
+	
+	span
+	
+	
+		arc	:(n1,r,n2) =>{ // n:[nx,ny]
+			const W = A*r,
+				w1 = hyp(...n1),
+				w2 = hyp(...n2);
+			
+			assert( w1<=W && w2<=W, `Arc speed must not exceed ${W}` )
+			
+			for( let [nx,ny]=n1
+				nx+=
+			
+		}
+	
 }
