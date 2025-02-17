@@ -84,30 +84,22 @@ execute = _ => { // runs on MCU
 	const
 	
 	stair = ([s,l,r],dir) => {
-		while(s--){
-			while(r--)
+		while(s--){ // steps
+			while(r--) // remains
 				yield dir;
-			r = l;
+			r = l; // step length
 			yield 0;
 		}
 	},
 	
 	
-	arc = 
-	
-	for(const [ttt,r,nn] of plan){
-		
-		 // line
-		for(const t of ttt){
-			emit(nn.map( (n,axis) =>({axis,t,n})} )))
-			wait(t);
-		}
-		
-		// arc
-		
+	span = ([ac,t0,de,r]) =>{
+		arcfinish(ac);
+		stair(ac,+1);
+		cruise(t0);
+		stair(de,-1);
+		arcstart(de,r);
 	}
-	
-	span
 	
 	
 		arc	:(n1,r,n2) =>{ // n:[nx,ny]

@@ -1,31 +1,31 @@
-/*
- WiFi Web Server LED Blink
-
- A simple web server that lets you blink an LED via the web.
- This sketch will print the IP address of your WiFi Shield (once connected)
- to the Serial monitor. From there, you can open that address in a web browser
- to turn on and off the LED on pin 5.
-
- If the IP address of your shield is yourAddress:
- http://yourAddress/H turns the LED on
- http://yourAddress/L turns it off
-
- This example is written for a network using WPA2 encryption. For insecure
- WEP or WPA, change the Wifi.begin() call and use Wifi.setMinSecurity() accordingly.
-
- Circuit:
- * WiFi shield attached
- * LED attached to pin 5
-
- created for arduino 25 Nov 2012
- by Tom Igoe
-
-ported for sparkfun esp32
-31.01.2017 by Jan Hendrik Berlin
-
- */
-
 #include <WiFi.h>
+
+/*
+  WiFi Web Server LED Blink
+
+  A simple web server that lets you blink an LED via the web.
+  This sketch will print the IP address of your WiFi Shield (once connected)
+  to the Serial monitor. From there, you can open that address in a web browser
+  to turn on and off the LED on pin 5.
+
+  If the IP address of your shield is yourAddress:
+  http://yourAddress/H turns the LED on
+  http://yourAddress/L turns it off
+
+  This example is written for a network using WPA2 encryption. For insecure
+  WEP or WPA, change the Wifi.begin() call and use Wifi.setMinSecurity() accordingly.
+
+  Circuit:
+   WiFi shield attached
+   LED attached to pin 5
+
+  created for arduino 25 Nov 2012
+  by Tom Igoe
+
+  ported for sparkfun esp32
+  31.01.2017 by Jan Hendrik Berlin
+
+*/
 
 #define ssid "ASUS 123"
 #define password "1qaz@WSX"
@@ -40,16 +40,16 @@ void setup() {
   connectWiFi();
 }
 
-void loop(){
+void loop() {
   checkWiFi();
 }
 
-void connectWiFi(){
+void connectWiFi() {
   // We start by connecting to a WiFi network
   delay(10);
 
-  Serial.printf("Connecting to %s:",ssid);
- 
+  Serial.printf("Connecting to %s:", ssid);
+
   WiFi.mode(WIFI_STA);
   //WiFi.setHostname(hostname);
   WiFi.begin(ssid, password);
@@ -102,9 +102,21 @@ void checkWiFi() {
 
         // Check to see if the client request was "GET /H" or "GET /L":
         if (currentLine.endsWith("GET /H")) {
+          Serial.println("HIGH");
           digitalWrite(led, HIGH);  // GET /H turns the LED on
         }
-        if (currentLine.endsWith("GET /L")) {
+        if (currentLine.endsWith("GET /B")) {
+          Serial.println("BLINK");
+          digitalWrite(led, HIGH);
+          delay (500);
+          digitalWrite(led, LOW);
+          delay (500);
+          digitalWrite(led, HIGH);
+          delay (500);
+          digitalWrite(led, LOW);
+        }
+        if (currentLine.endsWith("GET /L")){
+          Serial.println("LOW");
           digitalWrite(led, LOW);  // GET /L turns the LED off
         }
       }

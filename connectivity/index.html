@@ -32,7 +32,9 @@ o = (tag,props,ch) => {
 	return el;
 },
 
-query = command => fetch(ip+command),
+//query = command => fetch(ip+command),
+
+exec = e => fetch(ip+e.target.getAttribute("data-command")),
 
 ui = m => document.body.append(
 	o("input",{
@@ -40,9 +42,10 @@ ui = m => document.body.append(
 		onchange: e => ip=`//${e.target.value}/`
 	}),
 	
-	o("section", {}, Object.entries(m).map( ([label,key]) => o('button',{
+	o("section", {}, Object.entries(m).map( ([label,command]) => o('button',{
 		textContent:label,
-		onclick: e => query(key)
+		"data-command":command,
+		onclick:exec
 	})))
 );
 
@@ -54,8 +57,13 @@ ui = m => document.body.append(
 <script>
 
 ui({
-	"ON": "H",
-	"OFF": "L"
+	"LOW": "L",
+	"HIGH": "H",
+	"BLINK": "B",
+	"FAST": "F",
+	"SLOW": "S",
+	"fast+":"f",
+	"slow-":"s"
 });
 
 </script>
