@@ -27,7 +27,7 @@ prepare = (A,V) => {
 				t1 = round( I*(v-v1) ), // acceleration time
 				t2 = round( I*(v-v2) ), // decceleration time
 				
-				d0 = d - (t1*(v1+v)+t2*(v2+v))/2,
+				d0 = d - (t1*(v1+v)+t2*(v2+v))/2, // cruise distance
 				t0 = round(d0/v); // cruise time
 			
 			log(`max speed: ${v}`);//, t=${t}

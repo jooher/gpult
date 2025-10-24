@@ -1,0 +1,69 @@
+<!doctype html>
+<style>
+label{display:block; margin:2em;}
+label>input{display:block; }
+</style>
+
+<body>
+	<svg width="800" height="600" viewBox="0 0 400 800">
+		<path id=shape fill="#cce" d="M 40,300 55,375 338,465 236,349 202,133 103,245 z" />
+		<path id=tpath />
+		<circle id=spot cx=100 cy=100 r=40 fill=red />
+	</svg>
+	
+	<script src="maths.js"></script>
+	
+	<label>tool
+		<input id=tool type=range min=0 max=10 value=2 />
+	</label>
+	<label>allowance
+		<input id=allowance type=range min=0 max=10 value=1 />
+	</label>
+	<label>tolerance
+		<input id=tolerance type=range min=1 max=10 value=1 />
+	</label>
+	
+	<button onclick="update()">Update!</button>
+	
+	<script>
+	"use strict";
+
+	const
+	
+	
+	setup = ({tool,allowance,tolerance}) => ({
+		T: offset(tool+allowance),
+		A: smooth(tool,tolerance)
+	}),
+	
+	toolpath = ( shape,{T,A} ) => {
+		const
+		ofs = T(shape),
+		alw = A(ofs);
+		
+		console.log(shape);
+		console.log(ofs);
+		console.log(alw);
+		
+		return alw;
+	},
+	
+	route2svg = route =>  "\nM " + route.map(([lx,ly,r,ax,ay]) => [lx,ly,"a",r,r,0,0,Math.sign(r)>0?0:1,ax,ay].join(" ")).join("\nL ");
+	
+	
+	const
+	
+	update = e => {
+		const
+		shape	= parse(document.getElementById("shape").getAttribute("d")),
+		tpath = document.getElementById("tpath"),
+		
+		[tool,allowance,tolerance]=["tool","allowance","tolerance"].map( id => 1*document.getElementById(id).value ),
+		route = toolpath( shape, setup({tool,allowance,tolerance}) );
+		
+		tpath.setAttribute("d",route2svg(route));
+		tpath.setAttribute("style",`fill:none; stroke:rgba(0,180,0,.25); stroke-width:${tool*2}px`);
+	}
+
+	</script>
+</body>
