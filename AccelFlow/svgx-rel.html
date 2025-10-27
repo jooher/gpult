@@ -5,13 +5,13 @@ label>input{display:block; }
 </style>
 
 <body>
-	<svg width="800" height="600" viewBox="0 0 400 800">
+	<svg width="800" height="400" viewBox="0 100 800 400" transform="scale(1 -1)">
 		<path id=shape fill="#cce" d="M 40,300 55,375 338,465 236,349 202,133 103,245 z" />
 		<path id=route style="stroke:black; stroke-width:1px; fill:none"/>
 		<path id=tpath />
 	</svg>
 	
-	<script src="maths-abs.js"></script>
+	<script src="maths-rel.js"></script>
 	
 	<form onchange="update(this)" >
 		<label>tool
@@ -39,7 +39,7 @@ label>input{display:block; }
 
 	const
 	
-	prepareRouter = setup => ((offset,smooth) => corners => smooth(offset(corners)))(offset(setup),smooth(setup)),
+	prepareRouter = setup => ((offset,smooth) => corners => offset(corners)/*smooth()*/)(offset(setup),smooth(setup)),
 	
 	svg2corners = d => {
 		const
@@ -55,9 +55,20 @@ label>input{display:block; }
 		return corners;
 	},
 	
-	route2svg = route => "\nM " + route
+	abs2svg = route => "\nm " + route
 		.map(({lx,ly,ax,ay,r}) => [lx,ly,"a",r,r,0,0,Math.sign(r)>0?0:1,ax,ay].join(" "))
-		.join("\nL ");
+		.join("\nL "),
+		
+	rel2svg = ({ origin,edges}) => `\nM ${origin.dx} ${origin.dy}` + edges
+		.map(({dx,dy,ax,ay,r=1}) => ["\nl", dx,dy].join(" "))//,"a",r,r,0,0,Math.sign(r)>0?0:1,ax,ay
+		.join("");
+	
+
+const corners = svg2corners(document.getElementById("shape").getAttribute("d")),
+	edges = corners2edges(corners),
+	svgrel = rel2svg(edges);
+
+document.getElementById("route").setAttribute("d",svgrel);
 	
 	
 	const
@@ -68,7 +79,7 @@ label>input{display:block; }
 			setup = Object.fromEntries(new FormData(f).entries().map(([name,value])=>[name,1*value])),
 			router = prepareRouter(setup),
 			route = router(shapesvg),
-			d = route2svg(route),
+			d = rel2svg(route),
 			
 			plan = null;
 		
@@ -76,10 +87,12 @@ label>input{display:block; }
 		tpathsvg.setAttribute("d",d);
 		tpathsvg.setAttribute("style",`fill:none; stroke:rgba(0,180,0,.25); stroke-width:${setup.tool*2}px`);
 	})({
-		shapesvg: svg2corners(document.getElementById("shape").getAttribute("d")),
+		shapesvg: corners2edges(svg2corners(document.getElementById("shape").getAttribute("d"))),
 		routesvg: document.getElementById("route"),
 		tpathsvg: document.getElementById("tpath")
-	})
+	}),
+	
+	run = () => {}
 	
 
 	</script>

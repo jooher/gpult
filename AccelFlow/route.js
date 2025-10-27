@@ -1,6 +1,6 @@
 /*
 V: 60 m/min = 1 m/s = 1000 um/ms
-A: 1 g = 10 m/s2 = 10 e6 um/ e6 ms2 = 10 um/ms2
+A: 1 g = 10 m/s2 = 10 um/ms2
 */
 
 const
@@ -38,13 +38,13 @@ prepare = (A,V) => {
 
 	retreat = (nn,[[t1,t0,t2],r]) => (t0 ? V : v+t2*A ) - t1*A,
 
-	makeplan = path => {
+	makeplan = route => {
 		
 		const plan=[];
 		
-		for(let i=0; i<path.length; ){
+		for(let i=0; i<route.length; ){
 			
-			const [x,y,r,u] = path[i],
+			const [x,y,r,u] = route[i],
 				vr = A*r+vd, // desired arc speed
 				n = 1/Math.sqrt(hyp(x,y)), // reverse root is faster
 				d = 1/n,
@@ -61,7 +61,7 @@ prepare = (A,V) => {
 					v += A*t2; // simply reduce next step's entry speed
 					t2 = 0;
 				} 
-				plan[i++] = [[n*x,n*y],[t1,t0,t2],r]; // nx = cos, ny = sin
+				plan[i++] = {d:[n*x,n*y],t:[t1,t0,t2],r,u}; // nx = cos, ny = sin
 			}
 		}
 		return plan;
